@@ -25,7 +25,7 @@ func main() {
 
 	clientService := service.NewClientService(secretKey)
     loanService := service.NewLoanService(clientService)
-	adminService := service.NewAdminService()
+	adminService := service.NewAdminService(secretKey)
     externalAPIService := service.NewExternalAPIService()
 
     clientHandler := handler.NewClientHandler(clientService)
