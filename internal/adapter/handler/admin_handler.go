@@ -25,7 +25,7 @@ func (h *AdminHandler) RegisterAdmin(c *fiber.Ctx) error {
 		})
 	}
 
-	admin, err := h.adminService.RegisterAdmin(request.FullName, request.Role)
+	admin, err := h.adminService.RegisterAdmin(request.FullName, request.Role, request.Password)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": err.Error(),
@@ -33,6 +33,25 @@ func (h *AdminHandler) RegisterAdmin(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(admin)
+}
+
+func (h *AdminHandler) LoginAdmin(c *fiber.Ctx) error {
+	var loginReq domain.AdminLoginRequest
+
+	if err := c.BodyParser(&loginReq); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "invalid request",
+		})
+	}
+
+	loginResponse, err := h.adminService.LoginAdmin(loginReq)
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(loginResponse)
 }
 
 func (h *AdminHandler) GetAdminByID(c *fiber.Ctx) error {

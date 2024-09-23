@@ -8,14 +8,22 @@ import (
     "github.com/stevan1008/adminLoansGo/internal/adapter/handler"
     "github.com/stevan1008/adminLoansGo/internal/adapter/router"
     "github.com/stevan1008/adminLoansGo/internal/core/service"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+
 )
+
+const secretKey = "tribalworldwide"
 
 func main() {
     app := fiber.New()
 
     app.Use(logger.New())
+	app.Use(cors.New(cors.Config{
+        AllowOrigins: "*",
+        AllowMethods: "GET,POST,PUT,DELETE",
+    }))
 
-    clientService := service.NewClientService()
+	clientService := service.NewClientService(secretKey)
     loanService := service.NewLoanService(clientService)
 	adminService := service.NewAdminService()
     externalAPIService := service.NewExternalAPIService()

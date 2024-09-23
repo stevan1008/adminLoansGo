@@ -17,22 +17,47 @@ func NewClientHandler(clientService port.ClientService) *ClientHandler {
 }
 
 func (h *ClientHandler) RegisterClient(c *fiber.Ctx) error {
-    var request domain.RegisterRequest
+	var request domain.RegisterRequest
 
-    if err := c.BodyParser(&request); err != nil {
-        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-            "error": "invalid request",
-        })
-    }
+	if err := c.BodyParser(&request); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "invalid request",
+		})
+	}
 
-    client, err := h.clientService.RegisterClient(request.FullName, request.Email)
-    if err != nil {
-        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-            "error": err.Error(),
-        })
-    }
+	// Llamamos al servicio para registrar el cliente con su contraseña
+	client, err := h.clientService.RegisterClient(request.FullName, request.Email, request.Password)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
 
-    return c.Status(fiber.StatusCreated).JSON(client)
+	return c.Status(fiber.StatusCreated).JSON(client)
+}
+
+func (h *ClientHandler) LoginClient(c *fiber.Ctx) error {
+	var request domain.LoginRequest
+
+	if err := c.BodyParser(&request); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "invalid request",
+		})
+	}
+
+	loginReq := domain.LoginRequest{
+		ID:       request.ID,
+		Password: request.Password,
+	}
+
+	loginResp, err := h.clientService.LoginClient(loginReq)
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(loginResp)
 }
 
 func (h *ClientHandler) GetClientByID(c *fiber.Ctx) error {

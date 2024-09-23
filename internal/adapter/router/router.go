@@ -8,6 +8,7 @@ import (
 func SetupRouter(app *fiber.App, clientHandler *handler.ClientHandler, loanHandler *handler.LoanHandler, adminHandler *handler.AdminHandler, apiHandler *handler.APIHandler) {
     // Rutas para clientes
     app.Post("/clients", clientHandler.RegisterClient)
+	app.Post("/clients/login", clientHandler.LoginClient)
     app.Get("/clients/:id", clientHandler.GetClientByID)
 	app.Patch("/clients/:id/credit-score", clientHandler.UpdateCreditScore)
 
@@ -22,6 +23,7 @@ func SetupRouter(app *fiber.App, clientHandler *handler.ClientHandler, loanHandl
 
     // Rutas para administradores
 	app.Post("/admins", adminHandler.RegisterAdmin)
+	app.Post("/admins/login", adminHandler.LoginAdmin)
 	app.Get("/admins/:id", adminHandler.GetAdminByID)
 
     // Rutas para APIs de proveedores externos
