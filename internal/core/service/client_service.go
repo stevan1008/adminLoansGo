@@ -102,3 +102,13 @@ func (s *ClientServiceImpl) UpdateClientCreditScore(clientID string, creditScore
 
     return nil
 }
+
+func (s *ClientServiceImpl) GetAllClients() ([]domain.Client, error) {
+    var clientList []domain.Client
+
+    for _, client := range s.clients {
+        clientList = append(clientList, client)
+    }
+
+    return clientList, nil
+}

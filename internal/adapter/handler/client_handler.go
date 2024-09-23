@@ -92,3 +92,14 @@ func (h *ClientHandler) UpdateCreditScore(c *fiber.Ctx) error {
 
     return c.SendStatus(fiber.StatusOK)
 }
+
+func (h *ClientHandler) GetAllClients(c *fiber.Ctx) error {
+    clients, err := h.clientService.GetAllClients()
+    if err != nil {
+        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+            "error": "Failed to fetch clients",
+        })
+    }
+
+    return c.Status(fiber.StatusOK).JSON(clients)
+}

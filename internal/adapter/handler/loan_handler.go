@@ -119,3 +119,21 @@ func (h *LoanHandler) MarkAllLoansAsDelinquent(c *fiber.Ctx) error {
 
     return c.SendStatus(fiber.StatusOK)
 }
+
+func (h *LoanHandler) GetActiveLoan(c *fiber.Ctx) error {
+    clientID := c.Query("clientId")
+    if clientID == "" {
+        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+            "error": "clientId is required",
+        })
+    }
+
+    loan, err := h.loanService.GetActiveLoan(clientID)
+    if err != nil {
+        return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+            "error": err.Error(),
+        })
+    }
+
+    return c.Status(fiber.StatusOK).JSON(loan)
+}

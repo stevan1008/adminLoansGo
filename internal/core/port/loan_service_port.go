@@ -12,4 +12,5 @@ type LoanService interface {
     RegisterPayment(loanID string, amount float64) (domain.Payment, error)
     MarkLoanAsDelinquent(loanID string) error
     MarkAllLoansAsDelinquent() error
+	GetActiveLoan(clientID string) (domain.Loan, error)
 }

@@ -8,4 +8,5 @@ type ClientService interface {
 	LoginClient(loginReq domain.LoginRequest) (domain.LoginResponse, error)
     GetClientByID(clientID string) (domain.Client, error)
     UpdateClientCreditScore(clientID string, creditScore int) error
+	GetAllClients() ([]domain.Client, error) 
 }

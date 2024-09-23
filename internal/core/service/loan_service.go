@@ -180,3 +180,12 @@ func (s *LoanServiceImpl) MarkAllLoansAsDelinquent() error {
     }
     return nil
 }
+
+func (s *LoanServiceImpl) GetActiveLoan(clientID string) (domain.Loan, error) {
+    for _, loan := range s.loans {
+        if loan.ClientID == clientID && (loan.Status == domain.Pending || loan.Status == domain.Approved) {
+            return loan, nil
+        }
+    }
+    return domain.Loan{}, errors.New("no active loan found for this client")
+}
